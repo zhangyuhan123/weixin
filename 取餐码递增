@@ -1,0 +1,20 @@
+      $shop_id=intval(I('shop_id'));
+			$shop_name = M('group_shop_view')->where("s_id=".I('shop_id'))->getField('s_storename');
+			$time=date("Y-m-d H:i:s",time());  
+ 
+			//获得当日凌晨的时间戳
+ 
+			$today = strtotime(date("Y-m-d"),time());
+			$condition1['shop_id']=$shop_id;
+			$condition1['sub_time']=array('gt',$today);
+			$count=M('order')->where($condition1)->count();
+			if($count>0)
+			{
+				$num=M('order')->where($condition1)->order('sub_time desc')->getField('wait_num');
+				$num1=intval($num)+1;
+				$wait_num=sprintf("%03d",$num1);
+			}
+			else{
+				$num=1;
+				$wait_num=sprintf("%03d",$num);
+			}
